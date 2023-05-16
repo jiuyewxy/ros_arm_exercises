@@ -1,0 +1,8 @@
+<launch>
+	<node pkg="exercise_four" type="tf_listener" name="tf_listen" output="screen"/>
+  	<node pkg="exercise_four" type="tf_broadcaster" name="tf_broadcaster" output="screen"/>
+        <include file="$(find exercise_four)/launch/view_rviz.launch"/>
+</launch>
+
+
+

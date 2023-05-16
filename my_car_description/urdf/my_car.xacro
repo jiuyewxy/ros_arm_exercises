@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<robot name="myrobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Constants -->
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <xacro:property name="M_PI_2" value="1.570796327" />
+
+    <!-- Macro for inertia matrix -->
+    <!-- m:mass r:radius l:length -->
+    <xacro:macro name="cylinder_inertial_matrix" params="m r l">
+        <inertial>
+            <mass value="${m}" />
+            <inertia ixx="${m*(3*r*r+l*l)/12}" ixy = "0" ixz = "0"
+                iyy="${m*(3*r*r+l*l)/12}" iyz = "0"
+                izz="${m*r*r/2}" />
+        </inertial>
+    </xacro:macro>
+    <!-- m:mass l:length  w:width h:height-->
+    <xacro:macro name="box_inertial_matrix" params="m l w h">
+        <inertial>
+            <mass value="${m}" />
+            <inertia ixx="${m*(h*h+l*l)/12}" ixy = "0" ixz = "0"
+                iyy="${m*(w*w+l*l)/12}" iyz = "0"
+                izz="${m*(w*w+h*h)/12}" />
+        </inertial>
+    </xacro:macro>
+    <link name="base_footprint">
+    </link>
+    <joint name="base_joint" type="fixed">
+       <origin rpy="0 0 0"  xyz="0.0 0 0.055" />
+       <parent link="base_footprint" />
+       <child link="base_link" />
+    </joint>
+
+    <link name="base_link">
+      <visual>
+        <geometry>
+          <box size="0.20 0.14 0.03"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="">
+           <color rgba="1.0 1.0 0 1.0"/>
+        </material>
+      </visual>
+      <box_inertial_matrix m="2.0" l="0.20" w="0.12" h="0.03"/>
+    </link>
+    <link name="right_front_steer_link">
+    </link>
+    <joint name="right_front_steer_joint" type="revolute">
+       <origin rpy="0 0 0"  xyz="0.08 -0.1 0.01" />
+       <parent link="base_link" />
+       <child link="right_front_steer_link" />
+       <axis xyz="0 0 1" />  <!-- charge steer direction default is 0 0 1-->
+       <limit lower="-0.69" upper="0.69" effort="0" velocity="0" />
+    </joint>
+
+    <link name="right_front_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
+        <geometry>
+          <cylinder length="0.02" radius="0.025"/>
+        </geometry>
+        <material name="">
+          <color rgba="0.6 0.6 0.7 1.0"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="right_front_wheel_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="right_front_steer_link"/>
+        <child link="right_front_wheel"/>
+        <origin rpy="0 0 0" xyz="0 0 -0.04"/>
+        <limit effort="100" velocity="100"/>
+        <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
+
+    <link name="right_back_wheel">
+        <visual>
+            <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
+            <geometry>
+                <cylinder length="0.02" radius="0.025"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.6 0.6 0.7 1.0"/>
+            </material>
+        </visual>
+   </link>
+
+    <joint name="right_back_wheel_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="base_link"/>
+        <child link="right_back_wheel"/>
+        <origin rpy="0 0 0" xyz="-0.08 -0.1 -0.03"/>
+        <limit effort="100" velocity="100"/>
+        <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
+
+    <link name="left_front_steer_link">
+    </link>
+    <joint name="left_front_steer_joint" type="revolute">
+       <origin rpy="0 0 0"  xyz="0.08 0.1 0.01" />
+       <parent link="base_link" />
+       <child link="left_front_steer_link" />
+       <axis xyz="0 0 1" />  <!-- charge steer direction default is 0 0 1-->
+       <limit lower="-0.69" upper="0.69" effort="0" velocity="0" />
+    </joint>
+
+    <link name="left_front_wheel">
+        <visual>
+            <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
+            <geometry>
+                <cylinder length="0.02" radius="0.025"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.6 0.6 0.7 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+
+    <joint name="left_front_wheel_joint" type="continuous">
+      <axis xyz="0 1 0"/>
+      <parent link="left_front_steer_link"/>
+      <child link="left_front_wheel"/>
+      <origin rpy="0 0 0" xyz="0 0 -0.04"/>
+      <limit effort="100" velocity="100"/>
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
+
+    <link name="left_back_wheel">
+        <visual>
+            <origin xyz="0 0 0" rpy="${M_PI_2} 0 0"/>
+            <geometry>
+                <cylinder length="0.02" radius="0.025"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.6 0.6 0.7 1.0"/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name="left_back_wheel_joint" type="continuous">
+      <axis xyz="0 1 0"/>
+      <parent link="base_link"/>
+      <child link="left_back_wheel"/>
+      <origin rpy="0 0 0" xyz="-0.08 0.1 -0.03"/>
+      <limit effort="100" velocity="100"/>
+      <joint_properties damping="0.0" friction="0.0"/>
+    </joint>
+  
+</robot>
